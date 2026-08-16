@@ -1,5 +1,7 @@
 data/
 
+.venv/
+
 models/*.keras
 
 backend/__pycache__
