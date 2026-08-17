@@ -21,7 +21,7 @@ app = FastAPI(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 model_path = hf_hub_download(
-    repo_id = "ashutoshkashyap04/cutomer-review-sentiment-analysis",
+    repo_id = "ashutoshkashyap04/customer-review-sentiment-analysis",
     filename= "gru_model_v1.keras"
 )
 model = load_model(model_path)
