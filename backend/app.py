@@ -5,6 +5,7 @@ from pathlib import Path
 from backend.schemas import ReviewSentiment
 
 # for loading .keras model
+from huggingface_hub import hf_hub_download
 from tensorflow.keras.models import load_model
 
 import re
@@ -19,7 +20,11 @@ app = FastAPI(
 #load saved objects
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-model = load_model(BASE_DIR / 'models' / 'gru_model_v1.keras')
+model_path = hf_hub_download(
+    repo_id = "ashutoshkashyap04/cutomer-review-sentiment-analysis",
+    filename= "gru_model_v1.keras"
+)
+model = load_model(model_path)
 
 with open(BASE_DIR / 'models' / 'tokenizer.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
