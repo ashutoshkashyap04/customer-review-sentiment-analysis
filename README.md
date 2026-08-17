@@ -1,28 +1,30 @@
 # Customer Review Sentiment Analysis using RNN, LSTM & GRU
 
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
-![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-red)
+A complete deep learning and NLP project for **5-class customer review sentiment classification**, comparing Simple RNN, LSTM, and GRU architectures and integrating the selected model into a web application using **FastAPI** and **Streamlit**.
+
+---
 
 ## 📌 Project Overview
 
-This project focuses on **multi-class sentiment classification** of customer reviews using Deep Learning. The primary objective is to compare the performance of three recurrent neural network architectures:
+This project focuses on **multi-class sentiment classification of customer reviews using Deep Learning**.
 
-- Simple RNN
-- LSTM (Long Short-Term Memory)
-- GRU (Gated Recurrent Unit)
+The primary objective was not only to build a sentiment classifier, but also to understand how different recurrent neural network architectures handle sequential textual information.
 
-Rather than building a single model, this project demonstrates how different recurrent architectures learn textual information and how their ability to capture long-term dependencies affects sentiment classification performance.
+Three architectures were implemented and compared:
 
-The project follows a complete NLP workflow including:
+* **Simple RNN**
+* **LSTM (Long Short-Term Memory)**
+* **GRU (Gated Recurrent Unit)**
 
-- Data preprocessing
-- Text tokenization
-- Sequence padding
-- Word Embedding
-- Model training
-- Performance evaluation
-- Architecture comparison
+After evaluating their performance, the **GRU model was selected as the final model** based on its competitive performance and class-wise behavior.
+
+The project was then extended beyond model development by building:
+
+* A **FastAPI backend** for model inference
+* A **Streamlit frontend** for user interaction
+* A complete inference pipeline using the trained tokenizer and GRU model
+
+This makes the project a complete **end-to-end NLP deep learning application**, from data preprocessing and model development to API-based inference and user-facing deployment.
 
 ---
 
@@ -30,150 +32,187 @@ The project follows a complete NLP workflow including:
 
 Given a customer review, predict its sentiment rating among **five different classes**.
 
-| Rating | Sentiment |
-|---------|-----------|
-| 1 ⭐ | Very Negative |
-| 2 ⭐⭐ | Negative |
-| 3 ⭐⭐⭐ | Neutral |
-| 4 ⭐⭐⭐⭐ | Positive |
+| Rating  | Sentiment     |
+| ------- | ------------- |
+| 1 ⭐     | Very Negative |
+| 2 ⭐⭐    | Negative      |
+| 3 ⭐⭐⭐   | Neutral       |
+| 4 ⭐⭐⭐⭐  | Positive      |
 | 5 ⭐⭐⭐⭐⭐ | Very Positive |
+
+The model performs **5-class classification** rather than simply predicting positive or negative sentiment.
 
 ---
 
 ## 📂 Dataset
 
-**Dataset:** Yelp Review Full Dataset
+### Yelp Review Full Dataset
 
-The dataset contains customer reviews with ratings from **1 to 5 stars**, making it a balanced multi-class sentiment classification problem.
+The project uses the **Yelp Review Full Dataset**, which contains customer reviews associated with ratings from **1 to 5 stars**.
 
 For this project:
 
-- Training Samples: **100,000**
-- Test Samples: **20,000**
-- Number of Classes: **5**
+* **Training Samples:** 100,000
+* **Test Samples:** 20,000
+* **Number of Classes:** 5
+* **Classes:** 1-star to 5-star reviews
+* **Class Distribution:** Balanced
 
-Each class contains an equal number of reviews.
+The original rating labels were mapped into five numerical classes:
 
----
-
-## ⚙️ Tech Stack
-
-- Python
-- TensorFlow / Keras
-- NumPy
-- Pandas
-- Matplotlib
-- Scikit-learn
-- Jupyter Notebook
-
----
-
-## 📁 Project Structure
-
-```
-customer-review-sentiment-analysis/
-│
-├── data/
-│   |__ raw/
-│   |__ processed/
-│   |__ tokenized/
-|       
-├── models/
-│   ├── rnn_model_v1.keras
-│   ├── lstm_model_v1.keras
-│   ├── gru_model_v1.keras
-|   |__ lstm_history.pkl
-|   |__ gru_history.pkl
-│   └── tokenizer.pkl
-│
-├── notebooks/
-│   ├── 01_data_loading.ipynb
-│   ├── 02_eda.ipynb
-│   ├── 03_preprocessing.ipynb
-│   ├── 04_tokenization.ipynb
-│   ├── 05_rnn.ipynb
-│   ├── 06_lstm.ipynb
-│   └── 07_gru.ipynb
-│
-├── requirements.txt
-└── README.md
+```text
+0 → 1 Star → Very Negative
+1 → 2 Stars → Negative
+2 → 3 Stars → Neutral
+3 → 4 Stars → Positive
+4 → 5 Stars → Very Positive
 ```
 
 ---
 
-## 🔄 NLP Pipeline
+# 🔄 End-to-End Architecture
 
+```text
+                    CUSTOMER REVIEW
+                           │
+                           ▼
+                  Text Preprocessing
+                           │
+                           ▼
+                      Tokenization
+                           │
+                           ▼
+                    Sequence Padding
+                           │
+                           ▼
+                     Word Embedding
+                           │
+                           ▼
+                 ┌─────────────────────┐
+                 │   GRU Deep Learning │
+                 │       Model         │
+                 └─────────────────────┘
+                           │
+                           ▼
+                  Softmax (5 Classes)
+                           │
+                           ▼
+                  Sentiment Prediction
+                           │
+                           ▼
+                    FastAPI Backend
+                           │
+                           ▼
+                   Streamlit Frontend
+                           │
+                           ▼
+                     User Interface
 ```
-Customer Reviews
-        │
-        ▼
-Text Cleaning
-        │
-        ▼
-Tokenization
-        │
-        ▼
-Padding Sequences
-        │
-        ▼
-Embedding Layer
-        │
-        ▼
-RNN / LSTM / GRU
-        │
-        ▼
-Softmax Output (5 Classes)
+
+---
+
+# 🧠 NLP Pipeline
+
+The project follows a complete NLP preprocessing and modeling pipeline.
+
+### 1. Text Preprocessing
+
+Customer reviews are cleaned and transformed into a suitable format for the neural networks.
+
+The preprocessing pipeline includes operations such as:
+
+* Converting text to lowercase
+* Removing unnecessary textual noise
+* Preparing text for tokenization
+
+### 2. Tokenization
+
+The cleaned text is converted into numerical sequences using a tokenizer.
+
+Each word is mapped to an integer index.
+
+### 3. Sequence Padding
+
+Since reviews have different lengths, the sequences are padded to a fixed maximum length.
+
+```text
+Review → Token Sequence → Padded Sequence
 ```
 
----
+The project uses a maximum sequence length of **150 tokens**.
 
-## 🧠 Models Implemented
+### 4. Word Embedding
 
-### 1. Simple RNN
+The numerical sequences are passed through an embedding layer that learns dense vector representations of words.
 
-The baseline model for sequence classification.
+### 5. Recurrent Neural Network
 
-Characteristics:
+The embedded sequences are processed using:
 
-- Embedding layer
-- Simple recurrent layer
-- Dense output layer
-- Softmax activation
+* Simple RNN
+* LSTM
+* GRU
 
----
+### 6. Classification
 
-### 2. LSTM
-
-The LSTM architecture introduces memory cells and gating mechanisms, allowing the model to retain important contextual information over long sequences.
-
-Advantages:
-
-- Handles long-term dependencies
-- Reduces vanishing gradient issues
-- Better contextual understanding
+The final dense layer uses **Softmax activation** to produce probabilities across the five sentiment classes.
 
 ---
 
-### 3. GRU
+# 🧠 Models Implemented
 
-GRU is a computationally efficient gated recurrent architecture.
+## 1. Simple RNN
 
-Advantages:
+The Simple RNN was implemented as the baseline architecture.
 
-- Fewer parameters than LSTM
-- Faster training
-- Strong sequence modeling capability
-- Comparable performance to LSTM
+### Characteristics
+
+* Embedding layer
+* Simple recurrent layer
+* Dense output layer
+* Softmax activation
+
+The model struggled to maintain meaningful contextual information across longer sequences.
+
+---
+
+## 2. LSTM
+
+LSTM introduces memory cells and gating mechanisms to better preserve important information over longer sequences.
+
+### Advantages
+
+* Handles long-term dependencies
+* Reduces the impact of vanishing gradients
+* Better contextual information retention
+* More balanced classification compared with Simple RNN
+
+---
+
+## 3. GRU
+
+GRU is a gated recurrent architecture designed to provide strong sequence modeling capabilities with a simpler structure than LSTM.
+
+### Advantages
+
+* Fewer parameters than LSTM
+* Computationally efficient
+* Strong sequence modeling capability
+* Competitive performance with LSTM
+
+The GRU model was selected as the **final model for inference and application integration**.
 
 ---
 
 # 📊 Model Performance
 
-| Model | Accuracy | Macro Precision | Macro Recall | Macro F1 Score |
-|--------|---------:|----------------:|-------------:|---------------:|
-| Simple RNN | **26%** | 0.31 | 0.26 | 0.21 |
-| LSTM | **57%** | 0.57 | 0.57 | 0.57 |
-| GRU | **57%** | **0.58** | 0.57 | 0.57 |
+| Model      | Accuracy | Macro Precision | Macro Recall | Macro F1 Score |
+| ---------- | -------: | --------------: | -----------: | -------------: |
+| Simple RNN |  **26%** |            0.31 |         0.26 |           0.21 |
+| LSTM       |  **57%** |            0.57 |         0.57 |           0.57 |
+| **GRU**    |  **57%** |        **0.58** |         0.57 |           0.57 |
+
+The Simple RNN performed poorly, while both gated architectures showed a substantial improvement.
 
 ---
 
@@ -181,231 +220,594 @@ Advantages:
 
 ## Simple RNN
 
-| Class | Precision | Recall | F1 |
-|------|----------:|-------:|---:|
-| 0 | 0.48 | 0.21 | 0.30 |
-| 1 | 0.32 | 0.04 | 0.07 |
-| 2 | 0.24 | 0.17 | 0.20 |
-| 3 | 0.27 | 0.10 | 0.14 |
-| 4 | 0.23 | 0.78 | 0.36 |
+| Class | Precision | Recall |   F1 |
+| ----- | --------: | -----: | ---: |
+| 0     |      0.48 |   0.21 | 0.30 |
+| 1     |      0.32 |   0.04 | 0.07 |
+| 2     |      0.24 |   0.17 | 0.20 |
+| 3     |      0.27 |   0.10 | 0.14 |
+| 4     |      0.23 |   0.78 | 0.36 |
+
+The model became heavily biased toward Class 4 and struggled to distinguish several of the remaining sentiment categories.
 
 ---
 
 ## LSTM
 
-| Class | Precision | Recall | F1 |
-|------|----------:|-------:|---:|
-| 0 | 0.68 | 0.68 | 0.68 |
-| 1 | 0.49 | 0.55 | 0.52 |
-| 2 | 0.50 | 0.49 | 0.49 |
-| 3 | 0.51 | 0.50 | 0.50 |
-| 4 | 0.71 | 0.62 | 0.66 |
+| Class | Precision | Recall |   F1 |
+| ----- | --------: | -----: | ---: |
+| 0     |      0.68 |   0.68 | 0.68 |
+| 1     |      0.49 |   0.55 | 0.52 |
+| 2     |      0.50 |   0.49 | 0.49 |
+| 3     |      0.51 |   0.50 | 0.50 |
+| 4     |      0.71 |   0.62 | 0.66 |
+
+LSTM produced significantly more balanced predictions across the five sentiment classes.
 
 ---
 
 ## GRU
 
-| Class | Precision | Recall | F1 |
-|------|----------:|-------:|---:|
-| 0 | 0.72 | 0.65 | 0.68 |
-| 1 | 0.48 | 0.59 | 0.53 |
-| 2 | 0.50 | 0.53 | 0.51 |
-| 3 | 0.53 | 0.42 | 0.47 |
-| 4 | 0.67 | 0.68 | 0.68 |
+| Class | Precision |   Recall |   F1 |
+| ----- | --------: | -------: | ---: |
+| 0     |  **0.72** |     0.65 | 0.68 |
+| 1     |      0.48 | **0.59** | 0.53 |
+| 2     |      0.50 | **0.53** | 0.51 |
+| 3     |      0.53 |     0.42 | 0.47 |
+| 4     |      0.67 | **0.68** | 0.68 |
 
+The GRU achieved slightly higher macro precision than LSTM and improved recall for several classes.
 
 ---
 
 # 🔍 Key Observations
 
-## 1. Simple RNN Performance
+## Simple RNN
 
-The Simple RNN struggled to learn meaningful sequential patterns from customer reviews.
+The Simple RNN achieved only **26% accuracy** and a **0.21 macro F1 score**.
 
-### Key Findings
+It showed strong prediction bias toward Class 4 while performing poorly on several other classes.
 
-- Achieved only **26% test accuracy** on a 5-class classification problem.
-- Macro F1 Score of **0.21** indicates poor performance across classes.
-- The model became heavily biased toward predicting **Class 4**, achieving a recall of **0.78**, while failing to correctly identify several other classes.
-- Class 1 had a recall of only **0.04**, meaning most negative reviews were misclassified.
+For example:
 
-### Interpretation
+* Class 1 recall: **0.04**
+* Class 3 recall: **0.10**
+* Class 4 recall: **0.78**
 
-These results highlight one of the major limitations of vanilla recurrent neural networks. As review sequences become longer, Simple RNNs struggle to retain important contextual information due to the **vanishing gradient problem**, resulting in poor sequence understanding and highly imbalanced predictions.
-
----
-
-## 2. LSTM Improvements over Simple RNN
-
-Replacing the Simple RNN with an LSTM produced a significant improvement in overall performance.
-
-### Performance Improvement
-
-| Metric | Simple RNN | LSTM |
-|--------|-----------:|------:|
-| Accuracy | 26% | **57%** |
-| Macro F1 Score | 0.21 | **0.57** |
-
-The model achieved an improvement of **31 percentage points** in overall accuracy.
-
-### Class-wise Improvements
-
-Compared to the Simple RNN:
-
-- Class 0 Recall improved from **0.21 → 0.68**
-- Class 1 Recall improved from **0.04 → 0.55**
-- Class 3 Recall improved from **0.10 → 0.50**
-
-Unlike the Simple RNN, the LSTM produced much more balanced predictions across all sentiment classes.
-
-### Interpretation
-
-The gating mechanisms of LSTM enabled the model to preserve important contextual information throughout long review sequences, leading to substantially better feature learning and more reliable sentiment classification.
+This demonstrates the difficulty of a vanilla RNN in preserving useful contextual information across longer sequences.
 
 ---
 
-## 3. GRU vs LSTM
+## LSTM Improvement
 
-Although both models achieved the same overall accuracy (**57%**), the class-wise results reveal meaningful differences.
+Replacing the Simple RNN with LSTM resulted in a major improvement.
 
-### Areas where GRU Improved
+| Metric   | Simple RNN |     LSTM |
+| -------- | ---------: | -------: |
+| Accuracy |        26% |  **57%** |
+| Macro F1 |       0.21 | **0.57** |
 
-Compared with the LSTM:
+Accuracy improved by **31 percentage points**.
 
-- Class 1 Recall increased from **0.55 → 0.59**
-- Class 2 Recall increased from **0.49 → 0.53**
-- Class 4 Recall increased from **0.62 → 0.68**
+Class-wise recall also improved substantially:
 
-Additionally, GRU achieved a slightly higher macro precision (**0.58**) compared to LSTM (**0.57**).
+* Class 0: **0.21 → 0.68**
+* Class 1: **0.04 → 0.55**
+* Class 3: **0.10 → 0.50**
 
-### Trade-offs
-
-While GRU improved performance on several classes, it showed a slight reduction in recall for:
-
-- Class 0 (**0.68 → 0.65**)
-- Class 3 (**0.50 → 0.42**)
-
-Overall, both architectures delivered nearly identical performance, with GRU demonstrating slightly better class-wise balance in some sentiment categories.
-
-### Interpretation
-
-These results suggest that a computationally simpler gated architecture like GRU can achieve performance comparable to LSTM while maintaining competitive generalization across multiple sentiment classes.
+This demonstrates the advantage of gated recurrent architectures for sequence modeling.
 
 ---
 
-# 📊 Performance Summary
+## GRU vs LSTM
 
-| Model | Accuracy | Key Insight |
-|--------|---------:|-------------|
-| Simple RNN | **26%** | Unable to capture long-term dependencies effectively. |
-| LSTM | **57%** | Significant improvement through memory cells and gating mechanisms. |
-| GRU | **57%** | Comparable performance to LSTM with slightly stronger class-wise balance for some sentiment categories. |
+Both LSTM and GRU achieved **57% accuracy**, but their class-wise behavior differed.
+
+GRU improved recall for:
+
+* Class 1: **0.55 → 0.59**
+* Class 2: **0.49 → 0.53**
+* Class 4: **0.62 → 0.68**
+
+GRU also achieved:
+
+**Macro Precision: 0.58**
+
+compared with:
+
+**LSTM: 0.57**
+
+However, GRU showed lower recall for:
+
+* Class 0: **0.68 → 0.65**
+* Class 3: **0.50 → 0.42**
+
+Overall, the two gated architectures performed similarly, but GRU was selected as the final model because of its competitive performance and computationally simpler architecture.
 
 ---
 
-# 💡 Key Learnings
+# 🚀 From Model to Application
 
-Throughout this project, I gained practical experience with:
+After completing the model comparison, the project was extended into a complete application.
 
-- End-to-end NLP workflow
-- Text preprocessing
-- Tokenization and sequence padding
-- Word embeddings
-- Building recurrent neural networks using TensorFlow/Keras
-- Training and evaluating deep learning models
-- Comparing different recurrent architectures
-- Understanding the impact of long-term dependency learning
-- Evaluating models using Precision, Recall, F1 Score, and Confusion Matrix
+The final system consists of three major components:
+
+```text
+                 ┌──────────────────┐
+                 │ Streamlit        │
+                 │ Frontend         │
+                 └────────┬─────────┘
+                          │
+                          │ HTTP Request
+                          ▼
+                 ┌──────────────────┐
+                 │ FastAPI          │
+                 │ Backend          │
+                 └────────┬─────────┘
+                          │
+                          ▼
+                 ┌──────────────────┐
+                 │ GRU Model        │
+                 │ + Tokenizer      │
+                 └────────┬─────────┘
+                          │
+                          ▼
+                 Sentiment Prediction
+```
 
 ---
 
-# 🚀 Future Improvements
+# ⚡ FastAPI Backend
 
-Potential enhancements for this project include:
+The backend was developed using **FastAPI**.
 
-- Bidirectional LSTM
-- Bidirectional GRU
-- Attention Mechanism
-- Transformer-based architectures (BERT, RoBERTa)
-- Hyperparameter tuning
-- Pre-trained word embeddings (GloVe / FastText)
-- Model deployment using FastAPI
-- Docker containerization
-- CI/CD pipeline
-- MLOps integration
+Its responsibility is to:
+
+1. Receive a customer review from the frontend.
+2. Validate the incoming request.
+3. Preprocess the review.
+4. Tokenize the text.
+5. Apply sequence padding.
+6. Pass the sequence to the trained GRU model.
+7. Generate the predicted sentiment.
+8. Return the prediction to the frontend.
+
+### Backend Structure
+
+```text
+backend/
+├── app.py
+└── schemas.py
+```
+
+### `app.py`
+
+Contains the FastAPI application, model loading, preprocessing logic, and prediction endpoint.
+
+### `schemas.py`
+
+Contains the Pydantic request schema used to validate incoming review data.
+
+---
+
+# 🖥️ Streamlit Frontend
+
+The user interface was built using **Streamlit**.
+
+The frontend provides a simple interface where users can enter a customer review and receive the predicted sentiment.
+
+The frontend communicates with the FastAPI backend through an HTTP request.
+
+### Frontend Structure
+
+```text
+frontend/
+└── app.py
+```
+
+The separation between frontend and backend makes the application architecture more modular and easier to maintain.
+
+---
+
+# 🔗 Inference Workflow
+
+When a user submits a review:
+
+```text
+User enters review
+        │
+        ▼
+Streamlit Frontend
+        │
+        │ POST Request
+        ▼
+FastAPI `/predict`
+        │
+        ▼
+Text Preprocessing
+        │
+        ▼
+Tokenizer
+        │
+        ▼
+Sequence Padding
+        │
+        ▼
+GRU Model
+        │
+        ▼
+Predicted Class
+        │
+        ▼
+Sentiment Mapping
+        │
+        ▼
+Streamlit displays result
+```
+
+---
+
+# 📁 Project Structure
+
+The current repository structure is:
+
+```text
+customer-review-sentiment-analysis/
+│
+├── backend/
+│   ├── app.py
+│   └── schemas.py
+│
+├── frontend/
+│   └── app.py
+│
+├── models/
+│   ├── gru_history.pkl
+│   ├── lstm_history.pkl
+│   └── tokenizer.pkl
+│
+├── notebooks/
+│   ├── 01_data_loading.ipynb
+│   ├── 02_eda.ipynb
+│   ├── 03_text_preprocessing.ipynb
+│   ├── 04_tokenization.ipynb
+│   ├── 05_rnn.ipynb
+│   ├── 06_lstm.ipynb
+│   └── 07_gru.ipynb
+│
+├── .gitignore
+├── .python-version
+├── requirements.txt
+└── README.md
+```
+
+The repository currently contains dedicated backend and frontend directories, seven notebooks covering the modeling workflow, model-support artifacts, and the Python version configuration.
+
+> **Note:** The trained `.keras` model files are managed separately from the lightweight source-code structure because of their large file sizes.
+
+---
+
+# 🗂️ Notebook Workflow
+
+The notebooks are organized sequentially to document the development process.
+
+| Notebook                      | Purpose                           |
+| ----------------------------- | --------------------------------- |
+| `01_data_loading.ipynb`       | Load and inspect the dataset      |
+| `02_eda.ipynb`                | Exploratory data analysis         |
+| `03_text_preprocessing.ipynb` | Clean and preprocess review text  |
+| `04_tokenization.ipynb`       | Tokenization and sequence padding |
+| `05_rnn.ipynb`                | Build and evaluate Simple RNN     |
+| `06_lstm.ipynb`               | Build and evaluate LSTM           |
+| `07_gru.ipynb`                | Build and evaluate GRU            |
+
+This structure keeps the experimentation and model development process separate from the application code.
+
+---
+
+# 🛠️ Tech Stack
+
+### Programming & Development
+
+* Python 3.13
+* Jupyter Notebook
+
+### Data & NLP
+
+* NumPy
+* Pandas
+* NLTK
+* Scikit-learn
+
+### Deep Learning
+
+* TensorFlow
+* Keras
+
+### Backend
+
+* FastAPI
+* Pydantic
+* Uvicorn
+
+### Frontend
+
+* Streamlit
+
+### Visualization
+
+* Matplotlib
+* Seaborn
+
+The repository currently pins its Python ecosystem dependencies, including TensorFlow, Keras, FastAPI, Streamlit, Uvicorn, NLTK, NumPy, Pandas, and Scikit-learn.
 
 ---
 
 # ⚙️ Installation
 
-Clone the repository:
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ashutoshkashyap04/customer-review-sentiment-analysis.git
 ```
 
-Navigate to the project directory:
+Navigate into the project:
 
 ```bash
 cd customer-review-sentiment-analysis
 ```
 
-Create a virtual environment:
+---
+
+## 2. Create a Virtual Environment
 
 ```bash
 python -m venv .venv
 ```
 
-Activate the virtual environment:
-
-**Windows**
+### Windows
 
 ```bash
 .venv\Scripts\activate
 ```
 
-**Linux / macOS**
+### Linux / macOS
 
 ```bash
 source .venv/bin/activate
 ```
 
-Install the required dependencies:
+---
+
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
+The repository specifies Python **3.13** through the `.python-version` file.
+
 ---
 
-# ▶️ Usage
+# ▶️ Running the Application
 
-Run the notebooks in the following order:
+The application consists of two components:
 
-1. Data Loading
-2. Exploratory Data Analysis (EDA)
-3. Data Preprocessing
-4. Tokenization & Padding
-5. Simple RNN Model
-6. LSTM Model
-7. GRU Model
+1. FastAPI backend
+2. Streamlit frontend
 
-Each notebook is self-contained and documents the complete workflow for that stage of the project.
+Both need to be running for the complete application workflow.
+
+---
+
+## 1. Start the FastAPI Backend
+
+From the project root:
+
+```bash
+uvicorn backend.app:app --reload
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+FastAPI also provides interactive API documentation at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## 2. Start the Streamlit Frontend
+
+Open another terminal and activate the same virtual environment.
+
+Then run:
+
+```bash
+streamlit run frontend/app.py
+```
+
+Streamlit will provide a local URL where the application can be accessed through a web browser.
+
+---
+
+# 🔌 API Endpoint
+
+The primary prediction endpoint is:
+
+```text
+POST /predict
+```
+
+The endpoint accepts a customer review and returns the predicted sentiment.
+
+### Example Request
+
+```json
+{
+    "review": "The product was excellent and I really enjoyed the experience."
+}
+```
+
+### Example Response
+
+```json
+{
+        'review' : 'The product was excellent and I really enjoyed the experience.',
+        'predicted_class' : 3,
+        'rating' : 4,
+        'confidence'  : 0.85
+}
+```
+
+
+---
+
+# 📊 Sentiment Mapping
+
+The model predicts one of five numerical classes.
+
+| Model Class |  Rating | Sentiment     |
+| ----------: | ------: | ------------- |
+|           0 |     1 ⭐ | Very Negative |
+|           1 |    2 ⭐⭐ | Negative      |
+|           2 |   3 ⭐⭐⭐ | Neutral       |
+|           3 |  4 ⭐⭐⭐⭐ | Positive      |
+|           4 | 5 ⭐⭐⭐⭐⭐ | Very Positive |
+
+This mapping converts the model's numerical output into an interpretable customer-facing result.
+
+---
+
+# 💡 Key Learnings
+
+This project provided practical experience across both **Deep Learning and ML deployment**.
+
+### NLP & Deep Learning
+
+* End-to-end NLP workflow
+* Text preprocessing
+* Tokenization
+* Sequence padding
+* Word embeddings
+* Recurrent neural networks
+* LSTM architecture
+* GRU architecture
+* Long-term dependency learning
+* Multi-class classification
+
+### Model Evaluation
+
+* Accuracy
+* Precision
+* Recall
+* Macro F1 Score
+* Class-wise performance analysis
+* Confusion matrix analysis
+* Architecture comparison
+
+### Backend Development
+
+* FastAPI application development
+* REST API design
+* Pydantic request validation
+* Model inference through API endpoints
+* Uvicorn server
+
+### Frontend Development
+
+* Streamlit application development
+* User input handling
+* API communication
+* Displaying model predictions
+
+### Deployment-Oriented Engineering
+
+* Separating frontend and backend
+* Managing deep learning model artifacts
+* Dependency management
+* Python version compatibility
+* Preparing a deep learning model for application inference
 
 ---
 
 # 📌 Results
 
-- Successfully built and compared three recurrent neural network architectures for multi-class sentiment classification.
-- Improved test accuracy from **26%** using a Simple RNN to **57%** using gated recurrent architectures.
-- Demonstrated the importance of LSTM and GRU in learning long-term dependencies within textual data.
-- Performed detailed class-wise evaluation using Precision, Recall, and F1 Score to compare model behavior beyond overall accuracy.
+The project successfully demonstrates the progression from a basic recurrent architecture to a deployable deep learning application.
+
+### Model Development
+
+* Simple RNN achieved **26% accuracy**
+* LSTM achieved **57% accuracy**
+* GRU achieved **57% accuracy**
+* GRU achieved the highest macro precision at **0.58**
+
+### Application Development
+
+The final project includes:
+
+* A trained sentiment classification pipeline
+* GRU-based inference
+* FastAPI backend
+* Streamlit frontend
+* Tokenizer artifact
+* Request validation
+* Five-class sentiment prediction
+
+This transforms the project from a notebook-based experiment into a complete **NLP deep learning application**.
+
+---
+
+# 🚀 Future Improvements
+
+The current version represents **Version 1** of the project.
+
+Possible future improvements include:
+
+### Model Architecture
+
+* Bidirectional LSTM
+* Bidirectional GRU
+* Stacked LSTM
+* Stacked GRU
+* Attention mechanisms
+
+### Advanced NLP
+
+* Pre-trained word embeddings
+* GloVe
+* FastText
+* Transformer-based architectures
+* BERT
+* RoBERTa
+
+### Model Optimization
+
+* Hyperparameter tuning
+* Improved regularization
+* Learning-rate optimization
+* Better sequence-length analysis
+
+### Application & MLOps
+
+* Docker containerization
+* CI/CD pipeline
+* Automated model testing
+* Model versioning
+* Monitoring
+* Logging
+* MLOps integration
 
 ---
 
 # 🤝 Contributing
 
-Contributions, suggestions, and improvements are always welcome.
+Contributions, suggestions, and improvements are welcome.
 
 If you find this project useful, consider giving it a ⭐ on GitHub.
 
@@ -415,5 +817,15 @@ If you find this project useful, consider giving it a ⭐ on GitHub.
 
 **Ashutosh Kashyap**
 
+GitHub:
+https://github.com/ashutoshkashyap04
+
 ---
+
+## 🔗 Repository
+
+Complete source code, notebooks, model artifacts, backend, and frontend:
+
+https://github.com/ashutoshkashyap04/customer-review-sentiment-analysis
+
 
